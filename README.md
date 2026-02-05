@@ -42,56 +42,14 @@ Instead of reckless "buy/sell" signals, it creates a high-level **Risk Profile**
 * **AI Engine:** Google Gemini (Generative AI)
 * **Language:** Python 3.10+
 
----
 
-## 💻 Getting Started
 
-### Prerequisites
 
-* Python installed on your machine.
-* A Google AI Studio API Key.
 
-### Installation
-
-1.  **Clone the repository**
-    ```bash
-    git clone [https://github.com/yourusername/deriv-ai-insight-engine.git](https://github.com/yourusername/deriv-ai-insight-engine.git)
-    cd deriv-ai-insight-engine
-    ```
-
-2.  **Install dependencies**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3.  **Set up your API Key**
-    * Open `app.py` and paste your Google API key where indicated, or set it as an environment variable.
-
-4.  **Run the App**
-    ```bash
-    streamlit run app.py
-    ```
-
----
-
-## 📸 Demo
-
-*(Add a screenshot of your app interface here)*
-
----
 
 ## ⚠️ Disclaimer
 
 *This tool is for educational and informational purposes only. It is **not** a financial advisor and does not provide financial advice. Trading financial assets involves high risk.*
 View your app in AI Studio: https://ai.studio/apps/drive/1XQxZ1yqZo8_VIydgOLdFv035XwKsxm3Y
 
-## Run Locally
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
