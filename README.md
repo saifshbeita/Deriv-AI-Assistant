@@ -50,6 +50,6 @@ Instead of reckless "buy/sell" signals, it creates a high-level **Risk Profile**
 ##  Disclaimer
 
 *This tool is for educational and informational purposes only. It is **not** a financial advisor and does not provide financial advice. Trading financial assets involves high risk.*
-View your app in AI Studio: https://ai.studio/apps/drive/1XQxZ1yqZo8_VIydgOLdFv035XwKsxm3Y
+View your app in AI Studio: [https://ai.studio/apps/drive/1XQxZ1yqZo8_VIydgOLdFv035XwKsxm3Y]
 
 
