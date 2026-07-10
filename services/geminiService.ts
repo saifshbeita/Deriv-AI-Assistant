@@ -65,7 +65,6 @@ export const analyzePortfolioRisk = async (
   }
 
   const ai = new GoogleGenAI({ apiKey });
-
   const prompt = `
     Conduct a comprehensive market search for the latest news, sentiment, and technical data regarding these ${category} assets: ${assets.join(", ")}.
     
@@ -74,16 +73,19 @@ export const analyzePortfolioRisk = async (
   `;
 
   try {
+    // Isolate request generation parameters explicitly
+    const generationConfig = {
+      tools: [{ googleSearch: {} }],
+      systemInstruction: SYSTEM_INSTRUCTION,
+      responseMimeType: "application/json",
+      responseSchema: RESPONSE_SCHEMA,
+      temperature: 0.1,
+    };
+
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
-      config: {
-        tools: [{ googleSearch: {} }],
-        systemInstruction: SYSTEM_INSTRUCTION,
-        responseMimeType: "application/json",
-        responseSchema: RESPONSE_SCHEMA,
-        temperature: 0.1, 
-      },
+      config: generationConfig,
     });
 
     const responseText = response.text;
@@ -93,23 +95,19 @@ export const analyzePortfolioRisk = async (
 
     const report = JSON.parse(responseText) as RiskReport;
 
-    // Extract grounding chunks (sources)
-    const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
-    const sources: { title: string; uri: string }[] = [];
+    // Streamlined extraction of search grounding chunks
+    const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
+    const derivedSources = groundingChunks
+      .filter((chunk: any) => chunk.web?.uri && chunk.web?.title)
+      .map((chunk: any) => ({
+        title: chunk.web.title,
+        uri: chunk.web.uri,
+      }));
 
-    if (chunks) {
-      chunks.forEach((chunk: any) => {
-        if (chunk.web?.uri && chunk.web?.title) {
-          sources.push({
-            title: chunk.web.title,
-            uri: chunk.web.uri
-          });
-        }
-      });
-    }
-
-    // Remove duplicates based on URI
-    report.sources = sources.filter((v, i, a) => a.findIndex(t => (t.uri === v.uri)) === i);
+    // Deduplicate array elements cleanly by tracking unique URLs
+    report.sources = derivedSources.filter(
+      (source, index, array) => array.findIndex((item) => item.uri === source.uri) === index
+    );
 
     return report;
   } catch (error) {
