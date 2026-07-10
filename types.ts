@@ -2,17 +2,19 @@ export interface AssetImpact {
   asset: string;
   sentiment: 'positive' | 'negative' | 'neutral';
   impactDescription: string;
-  shortTermPressure: number; // 0 to 100
+  /** Short term pressure scale: 0 to 100 */
+  shortTermPressure: number;
 }
 
 export interface RiskReport {
   marketRegime: string;
-  riskScore: number; // 0 (Low Risk) to 100 (Extreme Risk)
+  /** Risk score scale: 0 (Low Risk) to 100 (Extreme Risk) */
+  riskScore: number;
   keyDrivers: string[];
   assetAnalysis: AssetImpact[];
   institutionalStrategy: string;
   disclaimer: string;
-  sources?: { title: string; uri: string }[];
+  sources?: Array<{ title: string; uri: string }>;
 }
 
 export interface AnalysisState {
@@ -21,6 +23,5 @@ export interface AnalysisState {
   report: RiskReport | null;
 }
 
-// Mock news is no longer needed but keeping it empty or unused is fine, 
-// removing it to clean up.
+// Cleaned up and retained for architectural requirements
 export const MOCK_NEWS = ``;
