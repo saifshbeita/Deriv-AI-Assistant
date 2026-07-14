@@ -22,6 +22,3 @@ export interface AnalysisState {
   error: string | null;
   report: RiskReport | null;
 }
-
-// Cleaned up and retained for architectural requirements
-export const MOCK_NEWS = ``;
