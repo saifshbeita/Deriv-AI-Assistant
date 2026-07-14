@@ -8,6 +8,15 @@ import { analyzePortfolioRisk } from './services/geminiService';
 type Step = 'category-selection' | 'analysis';
 type AssetCategory = 'Forex' | 'Cryptocurrencies' | 'Commodities' | 'Stocks & Indices' | 'Synthetic Indices';
 
+/** Example watchlist pre-filled when a market category is selected. */
+const CATEGORY_EXAMPLES: Record<AssetCategory, string[]> = {
+  'Forex': ['EURUSD', 'GBPUSD'],
+  'Cryptocurrencies': ['BTC', 'ETH'],
+  'Commodities': ['XAUUSD', 'OIL'],
+  'Stocks & Indices': ['SPX500', 'US100'],
+  'Synthetic Indices': ['Volatility 100', 'Boom 500'],
+};
+
 const App: React.FC = () => {
   const [step, setStep] = useState<Step>('category-selection');
   const [category, setCategory] = useState<AssetCategory | null>(null);
@@ -21,16 +30,7 @@ const App: React.FC = () => {
 
   const handleCategorySelect = (cat: AssetCategory) => {
     setCategory(cat);
-    
-    // Pre-fill some examples based on category for UX
-    let examples: string[] = [];
-    if (cat === 'Forex') examples = ['EURUSD', 'GBPUSD'];
-    if (cat === 'Cryptocurrencies') examples = ['BTC', 'ETH'];
-    if (cat === 'Commodities') examples = ['XAUUSD', 'OIL'];
-    if (cat === 'Stocks & Indices') examples = ['SPX500', 'US100'];
-    if (cat === 'Synthetic Indices') examples = ['Volatility 100', 'Boom 500'];
-    
-    setAssets(examples);
+    setAssets(CATEGORY_EXAMPLES[cat]);
     setStep('analysis');
   };
 
@@ -46,10 +46,13 @@ const App: React.FC = () => {
       if (!category) throw new Error("Category not selected");
       const report = await analyzePortfolioRisk(assets, category);
       setState({ isLoading: false, error: null, report });
-    } catch (err: any) {
+    } catch (err) {
       setState({
         isLoading: false,
-        error: "Analysis failed. Please try again.",
+        error:
+          err instanceof Error && err.message
+            ? err.message
+            : "Analysis failed. Please try again.",
         report: null
       });
     }
@@ -172,7 +175,7 @@ const App: React.FC = () => {
                   
                   {state.error && (
                      <div className="p-4 bg-brand-red/10 border border-brand-red/20 rounded text-brand-red text-xs mt-4 font-mono">
-                       > Error: {state.error}
+                       &gt; Error: {state.error}
                      </div>
                   )}
                 </div>
