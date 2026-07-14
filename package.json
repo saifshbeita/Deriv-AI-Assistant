@@ -1,10 +1,12 @@
 {
-  "name": "copy-of-deriv-ai-assistant",
+  "name": "deriv-ai-assistant",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "AI risk-analysis assistant that turns live market news into structured risk reports",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "typecheck": "tsc --noEmit",
     "build": "vite build",
     "preview": "vite preview"
   },
