@@ -73,7 +73,7 @@ export const AnalysisReport: React.FC<AnalysisReportProps> = ({ report }) => {
             </h3>
             <ul className="space-y-3">
               {report.keyDrivers.map((driver, idx) => (
-                <li key={idx} className="flex gap-4 text-white text-sm">
+                <li key={driver} className="flex gap-4 text-white text-sm">
                   <span className="font-mono text-brand-gray">0{idx + 1}</span>
                   <span className="leading-relaxed">{driver}</span>
                 </li>
@@ -153,9 +153,9 @@ export const AnalysisReport: React.FC<AnalysisReportProps> = ({ report }) => {
             <div className="bg-brand-surface border border-brand-surfaceHighlight rounded-lg p-4">
               <h3 className="text-[10px] font-bold text-brand-gray uppercase tracking-widest mb-3">Intelligence Sources</h3>
               <ul className="space-y-2">
-                {report.sources.map((source, idx) => (
-                  <li key={idx}>
-                    <a 
+                {report.sources.map((source) => (
+                  <li key={source.uri}>
+                    <a
                       href={source.uri} 
                       target="_blank" 
                       rel="noopener noreferrer" 
