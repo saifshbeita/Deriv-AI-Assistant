@@ -10,11 +10,22 @@ interface AssetInputProps {
 export const AssetInput: React.FC<AssetInputProps> = ({ assets, setAssets, disabled }) => {
   const [inputValue, setInputValue] = useState('');
 
+  /**
+   * Splits on commas so pasting or typing a list like "EURUSD, BTC, SPX"
+   * (as the placeholder suggests) adds each symbol individually instead
+   * of as one literal ticker.
+   */
   const handleAdd = () => {
-    if (inputValue.trim() && !assets.includes(inputValue.trim().toUpperCase())) {
-      setAssets([...assets, inputValue.trim().toUpperCase()]);
-      setInputValue('');
-    }
+    const tickers = inputValue
+      .split(',')
+      .map((t) => t.trim().toUpperCase())
+      .filter((t) => t.length > 0 && !assets.includes(t));
+
+    if (tickers.length === 0) return;
+
+    const uniqueNewTickers = tickers.filter((t, i) => tickers.indexOf(t) === i);
+    setAssets([...assets, ...uniqueNewTickers]);
+    setInputValue('');
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
