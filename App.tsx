@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Terminal, RefreshCcw, FileText, Play, ArrowLeft, TrendingUp, Bitcoin, Gem, DollarSign, Activity, Globe, Search } from 'lucide-react';
+import { Terminal, RefreshCcw, FileText, ArrowLeft, TrendingUp, Bitcoin, Gem, DollarSign, Activity, Globe, Search } from 'lucide-react';
 import { AssetInput } from './components/AssetInput';
 import { AnalysisReport } from './components/AnalysisReport';
 import { AnalysisState } from './types';
