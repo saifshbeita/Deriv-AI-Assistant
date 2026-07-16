@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Terminal, RefreshCcw, FileText, ArrowLeft, TrendingUp, Bitcoin, Gem, DollarSign, Activity, Globe, Search } from 'lucide-react';
+import { Terminal, RefreshCcw, FileText, ArrowLeft, TrendingUp, Bitcoin, Gem, DollarSign, Activity, Globe, Search, type LucideIcon } from 'lucide-react';
 import { AssetInput } from './components/AssetInput';
 import { AnalysisReport } from './components/AnalysisReport';
 import { AnalysisState } from './types';
@@ -16,6 +16,15 @@ const CATEGORY_EXAMPLES: Record<AssetCategory, string[]> = {
   'Stocks & Indices': ['SPX500', 'US100'],
   'Synthetic Indices': ['Volatility 100', 'Boom 500'],
 };
+
+/** Cards shown on the category-selection screen, one per market. */
+const CATEGORY_CARDS: Array<{ id: AssetCategory; icon: LucideIcon; desc: string }> = [
+  { id: 'Forex', icon: DollarSign, desc: 'Major & Minor Pairs' },
+  { id: 'Cryptocurrencies', icon: Bitcoin, desc: 'Digital Assets' },
+  { id: 'Commodities', icon: Gem, desc: 'Gold, Oil, Silver' },
+  { id: 'Stocks & Indices', icon: TrendingUp, desc: 'Global Equities' },
+  { id: 'Synthetic Indices', icon: Activity, desc: 'Simulated Markets' },
+];
 
 const App: React.FC = () => {
   const [step, setStep] = useState<Step>('category-selection');
@@ -66,16 +75,10 @@ const App: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[
-          { id: 'Forex', icon: DollarSign, desc: 'Major & Minor Pairs' },
-          { id: 'Cryptocurrencies', icon: Bitcoin, desc: 'Digital Assets' },
-          { id: 'Commodities', icon: Gem, desc: 'Gold, Oil, Silver' },
-          { id: 'Stocks & Indices', icon: TrendingUp, desc: 'Global Equities' },
-          { id: 'Synthetic Indices', icon: Activity, desc: 'Simulated Markets' },
-        ].map((item) => (
+        {CATEGORY_CARDS.map((item) => (
           <button
             key={item.id}
-            onClick={() => handleCategorySelect(item.id as AssetCategory)}
+            onClick={() => handleCategorySelect(item.id)}
             className="group relative overflow-hidden bg-brand-surface border border-brand-surfaceHighlight hover:border-brand-red p-8 rounded-xl text-left transition-all duration-300 hover:transform hover:-translate-y-1"
           >
             <div className="absolute top-0 right-0 w-24 h-24 bg-brand-red/5 rounded-bl-full group-hover:bg-brand-red/10 transition-colors"></div>
