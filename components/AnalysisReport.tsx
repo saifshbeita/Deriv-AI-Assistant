@@ -1,11 +1,34 @@
 import React from 'react';
-import { RiskReport } from '../types';
+import { AssetImpact, RiskReport } from '../types';
 import { ShieldAlert, TrendingUp, TrendingDown, Minus, Activity, Lock, ExternalLink } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from 'recharts';
 
 interface AnalysisReportProps {
   report: RiskReport;
 }
+
+/** Bullish/bearish/neutral badge for a single asset's sentiment. */
+const SentimentBadge: React.FC<{ sentiment: AssetImpact['sentiment'] }> = ({ sentiment }) => {
+  if (sentiment === 'positive') {
+    return (
+      <span className="flex items-center text-xs font-bold text-emerald-500">
+        <TrendingUp size={14} className="mr-1" /> BULLISH
+      </span>
+    );
+  }
+  if (sentiment === 'negative') {
+    return (
+      <span className="flex items-center text-xs font-bold text-brand-red">
+        <TrendingDown size={14} className="mr-1" /> BEARISH
+      </span>
+    );
+  }
+  return (
+    <span className="flex items-center text-xs font-bold text-brand-gray">
+      <Minus size={14} className="mr-1" /> NEUTRAL
+    </span>
+  );
+};
 
 export const AnalysisReport: React.FC<AnalysisReportProps> = ({ report }) => {
   const getRegimeColor = (regime: string) => {
@@ -94,9 +117,7 @@ export const AnalysisReport: React.FC<AnalysisReportProps> = ({ report }) => {
                       <span className="bg-white text-black px-2 py-0.5 rounded text-sm font-black font-mono">
                         {asset.asset}
                       </span>
-                      {asset.sentiment === 'positive' && <span className="flex items-center text-xs font-bold text-emerald-500"><TrendingUp size={14} className="mr-1"/> BULLISH</span>}
-                      {asset.sentiment === 'negative' && <span className="flex items-center text-xs font-bold text-brand-red"><TrendingDown size={14} className="mr-1"/> BEARISH</span>}
-                      {asset.sentiment === 'neutral' && <span className="flex items-center text-xs font-bold text-brand-gray"><Minus size={14} className="mr-1"/> NEUTRAL</span>}
+                      <SentimentBadge sentiment={asset.sentiment} />
                     </div>
                     <div className="text-xs text-brand-gray font-mono uppercase">
                       Pressure: <span className={asset.shortTermPressure > 60 ? 'text-brand-red font-bold' : 'text-white'}>{asset.shortTermPressure}</span>
