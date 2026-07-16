@@ -28,6 +28,9 @@ export const AnalysisReport: React.FC<AnalysisReportProps> = ({ report }) => {
     sentiment: a.sentiment
   }));
 
+  // Guard against out-of-range model output before using the score for a bar width.
+  const clampedRiskScore = Math.min(100, Math.max(0, report.riskScore));
+
   return (
     <div className="animate-fade-in space-y-6">
       {/* Header Stats */}
@@ -45,14 +48,14 @@ export const AnalysisReport: React.FC<AnalysisReportProps> = ({ report }) => {
         <div className="p-6 rounded-lg border border-brand-surfaceHighlight bg-brand-surface">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-brand-gray uppercase tracking-widest">Risk Index</span>
-            <ShieldAlert size={18} className={report.riskScore > 75 ? 'text-brand-red' : 'text-white'} />
+            <ShieldAlert size={18} className={clampedRiskScore > 75 ? 'text-brand-red' : 'text-white'} />
           </div>
           <div className="flex items-end gap-4">
-            <div className="text-4xl font-black text-white">{report.riskScore}<span className="text-xl text-brand-gray font-normal">/100</span></div>
+            <div className="text-4xl font-black text-white">{clampedRiskScore}<span className="text-xl text-brand-gray font-normal">/100</span></div>
             <div className="h-3 flex-1 bg-brand-surfaceHighlight rounded-full mb-2 overflow-hidden">
-              <div 
-                className={`h-full transition-all duration-1000 ${report.riskScore > 75 ? 'bg-brand-red' : report.riskScore > 40 ? 'bg-orange-500' : 'bg-white'}`}
-                style={{ width: `${report.riskScore}%` }}
+              <div
+                className={`h-full transition-all duration-1000 ${clampedRiskScore > 75 ? 'bg-brand-red' : clampedRiskScore > 40 ? 'bg-orange-500' : 'bg-white'}`}
+                style={{ width: `${clampedRiskScore}%` }}
               ></div>
             </div>
           </div>
