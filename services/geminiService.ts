@@ -85,7 +85,15 @@ function parseReportJson(responseText: string): RiskReport {
     .trim()
     .replace(/^```(?:json)?\s*/i, '')
     .replace(/```\s*$/, '');
-  return JSON.parse(cleaned) as RiskReport;
+
+  try {
+    return JSON.parse(cleaned) as RiskReport;
+  } catch (error) {
+    console.error("Failed to parse model response as JSON:", error, cleaned);
+    throw new Error(
+      "The AI returned a response that could not be read. Please try again.",
+    );
+  }
 }
 
 /** Collects unique, attributable web sources from the grounding metadata. */
