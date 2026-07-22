@@ -45,14 +45,17 @@ export const AnalysisReport: React.FC<AnalysisReportProps> = ({ report }) => {
     return '#ffffff'; // White for safe/low pressure in this dark theme
   };
 
+  // Guard against out-of-range model output before using scores for bar
+  // widths, chart heights, or color thresholds.
+  const clamp = (value: number) => Math.min(100, Math.max(0, value));
+
   const chartData = report.assetAnalysis.map(a => ({
     name: a.asset,
-    pressure: a.shortTermPressure,
+    pressure: clamp(a.shortTermPressure),
     sentiment: a.sentiment
   }));
 
-  // Guard against out-of-range model output before using the score for a bar width.
-  const clampedRiskScore = Math.min(100, Math.max(0, report.riskScore));
+  const clampedRiskScore = clamp(report.riskScore);
 
   return (
     <div className="animate-fade-in space-y-6">
@@ -110,7 +113,9 @@ export const AnalysisReport: React.FC<AnalysisReportProps> = ({ report }) => {
                <h3 className="text-xs font-bold text-white uppercase tracking-widest">Asset Impact Matrix</h3>
             </div>
             <div className="divide-y divide-brand-surfaceHighlight">
-              {report.assetAnalysis.map((asset) => (
+              {report.assetAnalysis.map((asset) => {
+                const pressure = clamp(asset.shortTermPressure);
+                return (
                 <div key={asset.asset} className="p-6 hover:bg-brand-surfaceHighlight/30 transition-colors">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
@@ -120,14 +125,15 @@ export const AnalysisReport: React.FC<AnalysisReportProps> = ({ report }) => {
                       <SentimentBadge sentiment={asset.sentiment} />
                     </div>
                     <div className="text-xs text-brand-gray font-mono uppercase">
-                      Pressure: <span className={asset.shortTermPressure > 60 ? 'text-brand-red font-bold' : 'text-white'}>{asset.shortTermPressure}</span>
+                      Pressure: <span className={pressure > 60 ? 'text-brand-red font-bold' : 'text-white'}>{pressure}</span>
                     </div>
                   </div>
                   <p className="text-sm text-gray-300 leading-relaxed">
                     {asset.impactDescription}
                   </p>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
