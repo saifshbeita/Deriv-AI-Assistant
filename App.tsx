@@ -182,7 +182,7 @@ const App: React.FC = () => {
                   </button>
                   
                   {state.error && (
-                     <div className="p-4 bg-brand-red/10 border border-brand-red/20 rounded text-brand-red text-xs mt-4 font-mono">
+                     <div role="alert" className="p-4 bg-brand-red/10 border border-brand-red/20 rounded text-brand-red text-xs mt-4 font-mono">
                        &gt; Error: {state.error}
                      </div>
                   )}
