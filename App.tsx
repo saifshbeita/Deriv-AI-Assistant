@@ -40,6 +40,9 @@ const App: React.FC = () => {
   const handleCategorySelect = (cat: AssetCategory) => {
     setCategory(cat);
     setAssets(CATEGORY_EXAMPLES[cat]);
+    // Clear any report/error from a previous category so the report panel
+    // doesn't keep showing results for a different market.
+    setState({ isLoading: false, error: null, report: null });
     setStep('analysis');
   };
 
