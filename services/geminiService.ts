@@ -77,6 +77,24 @@ function getClient(): GoogleGenAI {
 }
 
 /**
+ * Checks that a parsed response has the fields the UI depends on, so a
+ * malformed or truncated model response fails with a clear message here
+ * instead of crashing later (e.g. `.map is not a function` while rendering).
+ */
+function isValidRiskReport(value: unknown): value is Omit<RiskReport, 'sources'> {
+  if (!value || typeof value !== 'object') return false;
+  const r = value as Record<string, unknown>;
+  return (
+    typeof r.marketRegime === 'string' &&
+    typeof r.riskScore === 'number' &&
+    Array.isArray(r.keyDrivers) &&
+    Array.isArray(r.assetAnalysis) &&
+    typeof r.institutionalStrategy === 'string' &&
+    typeof r.disclaimer === 'string'
+  );
+}
+
+/**
  * Extracts the JSON payload from the model response, tolerating the
  * markdown code fences models sometimes wrap around structured output.
  */
@@ -86,14 +104,24 @@ function parseReportJson(responseText: string): RiskReport {
     .replace(/^```(?:json)?\s*/i, '')
     .replace(/```\s*$/, '');
 
+  let parsed: unknown;
   try {
-    return JSON.parse(cleaned) as RiskReport;
+    parsed = JSON.parse(cleaned);
   } catch (error) {
     console.error("Failed to parse model response as JSON:", error, cleaned);
     throw new Error(
       "The AI returned a response that could not be read. Please try again.",
     );
   }
+
+  if (!isValidRiskReport(parsed)) {
+    console.error("Model response is missing required fields:", parsed);
+    throw new Error(
+      "The AI returned an incomplete risk report. Please try again.",
+    );
+  }
+
+  return parsed;
 }
 
 /** Collects unique, attributable web sources from the grounding metadata. */
