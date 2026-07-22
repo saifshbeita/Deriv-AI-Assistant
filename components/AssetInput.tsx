@@ -7,6 +7,11 @@ interface AssetInputProps {
   disabled?: boolean;
 }
 
+// Real symbols (e.g. "Volatility 100", "SPX500") are well under this;
+// it exists to reject a pasted sentence with no commas from becoming a
+// single malformed watchlist entry.
+const MAX_TICKER_LENGTH = 32;
+
 export const AssetInput: React.FC<AssetInputProps> = ({ assets, setAssets, disabled }) => {
   const [inputValue, setInputValue] = useState('');
 
@@ -19,7 +24,7 @@ export const AssetInput: React.FC<AssetInputProps> = ({ assets, setAssets, disab
     const tickers = inputValue
       .split(',')
       .map((t) => t.trim().toUpperCase())
-      .filter((t) => t.length > 0 && !assets.includes(t));
+      .filter((t) => t.length > 0 && t.length <= MAX_TICKER_LENGTH && !assets.includes(t));
 
     if (tickers.length === 0) return;
 
