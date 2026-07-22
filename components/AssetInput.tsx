@@ -77,6 +77,7 @@ export const AssetInput: React.FC<AssetInputProps> = ({ assets, setAssets, disab
             <button
               onClick={() => removeAsset(asset)}
               disabled={disabled}
+              aria-label={`Remove ${asset}`}
               className="hover:text-brand-red focus:outline-none transition-colors"
             >
               <X size={14} />
