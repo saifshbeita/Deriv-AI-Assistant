@@ -45,7 +45,9 @@ const App: React.FC = () => {
 
   const handleAnalyze = async () => {
     if (assets.length === 0) {
-      setState(prev => ({ ...prev, error: "Please add at least one asset." }));
+      // Clear any prior report too, so a validation error can't leave a
+      // stale report on screen that no longer matches the watchlist.
+      setState({ isLoading: false, error: "Please add at least one asset.", report: null });
       return;
     }
 
